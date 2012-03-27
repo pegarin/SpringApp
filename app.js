@@ -36,7 +36,7 @@ io.sockets.on('connection', function (socket) {
 	// when the client emits 'sendchat', this listens and executes
 	socket.on('sendchat', function (data) {
 		// we tell the client to execute 'updatechat' with 2 parameters
-		io.sockets.in(socket.room).emit('updatechat', socket.username, data);
+		io.sockets.in(socket.room).emit('updatechat', socket.username, sanitize(data));
 	});
 	
 	socket.on('switchRoom', function(newroom){
@@ -63,3 +63,10 @@ io.sockets.on('connection', function (socket) {
 		socket.leave(socket.room);
 	});
 });
+
+function sanitize(inputHtml) {
+    inputHtml = inputHtml.toString();
+    return inputHtml.replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;");
+}
